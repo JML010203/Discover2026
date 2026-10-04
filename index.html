@@ -59,6 +59,7 @@
     .header-inner { max-width: 1280px; margin: 0 auto; padding: 14px 16px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
     .logo { color: var(--main); font-size: 24px; font-weight: 900; letter-spacing: -0.02em; }
     .tagline { color: var(--sub); font-size: 14px; flex: 1; min-width: 220px; }
+    .recommend { padding: 7px 12px; font-size: 13.5px; text-decoration: none; white-space: nowrap; }
     .sample-flag { font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; border: 1px dashed var(--sub); color: var(--sub); white-space: nowrap; }
 
     /* 레이아웃: PC 왼쪽 S1 / 오른쪽 S2·S4, 모바일은 위→아래 */
@@ -224,6 +225,7 @@
       <span class="logo">삼일핏</span>
       <p class="tagline">다이어트 목표 · 야근 시간 · 식대 버짓을 넣으면 용산 일대 식당과 편의점 메뉴로 1주일 맞춤 식단과 칼로리를 짜드려요</p>
       <span class="sample-flag" id="sample-flag" hidden>샘플 데이터</span>
+      <a class="btn btn-ghost recommend" id="recommend" target="_blank" rel="noopener" hidden>🍽️ 메뉴 추천하기</a>
     </div>
   </header>
 
@@ -320,6 +322,8 @@
   const MEAL_LABEL = { lunch: '점심', dinner: '저녁', snack: '심야 야식' };
   const DEFAULT_INPUT = { lunchBudget: 15000, dinnerBudget: 20000, mode: 'maintain', work: ['off', 'off', 'ot1', 'ot1', 'off'], cheat: 'none' };
   const STORE_KEY = 'samilfit:v2';
+  // 구글 폼 '삼일핏 메뉴 추천하기' 응답 링크 (tools/menu_recommend_form.gs로 생성). 비어 있으면 헤더 버튼을 숨김
+  const RECOMMEND_FORM_URL = '';
   const SAMPLE_DATA = false; // 샘플 데이터로 돌릴 때만 true (화면 상단에 표시)
 
   // ---------- 저장 ----------
@@ -688,6 +692,10 @@
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeSheet(); });
 
   // ---------- 시작 ----------
+  if (RECOMMEND_FORM_URL) {
+    $('#recommend').href = RECOMMEND_FORM_URL;
+    $('#recommend').hidden = false;
+  }
   fetch('data/restaurants.json')
     .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
     .then((rows) => {
